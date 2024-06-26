@@ -1,20 +1,54 @@
 <template>
   <div
-      :class="fullScreen.value ?  'fixed' : 'absolute'"
-      class="max-w-fit flex flex-col bottom-0 left-1/2 -translate-x-1/2 z-10">
+      :class="fullScreen.value ?  'vuefinder__toast--fullscreen' : 'vuefinder__toast--sizedscreen'"
+      class="vuefinder__toast">
     <transition-group
         name="vf-toast-item"
-        leave-active-class="transition-all duration-1000"
-        leave-to-class="opacity-0"
+        leave-active-class="vuefinder__toast__item--leave_active"
+        leave-to-class="vuefinder__toast__item--leave_to"
     >
       <div v-for="(message, index) in messageQueue" @click="removeItem(index)" :key="message"
            :class="getTypeClass(message.type)"
-           class="inline-block mx-auto my-0.5 py-0.5 px-2 min-w-max bg-gray-50 dark:bg-gray-600 border text-xs sm:text-sm rounded cursor-pointer ">
+           class="vuefinder__toast__item">
          {{ message.label }}
       </div>
     </transition-group>
   </div>
 </template>
+
+<style>
+.vuefinder__toast {
+  @apply max-w-fit flex flex-col bottom-0 left-1/2 -translate-x-1/2 z-10;
+}
+
+.vuefinder__toast--fullscreen {
+  @apply fixed;
+}
+
+.vuefinder__toast--sizedscreen {
+  @apply absolute;
+}
+
+.vuefinder__toast__item--leave_active {
+  @apply transition-all duration-1000;
+}
+
+.vuefinder__toast__item--leave_to {
+  @apply opacity-0;
+}
+
+.vuefinder__toast__item {
+  @apply inline-block mx-auto my-0.5 py-0.5 px-2 min-w-max bg-gray-50 dark:bg-gray-600 border text-xs sm:text-sm rounded cursor-pointer ;
+}
+
+.vuefinder__toast__item--error {
+  @apply text-red-400 border-red-400 dark:text-red-300 dark:border-red-300;
+}
+
+.vuefinder__toast__item--success {
+  @apply text-lime-600 border-lime-600 dark:text-lime-300 dark:border-lime-1300;
+}
+</style>
 
 <script setup>
 import {inject, ref} from 'vue';
@@ -27,9 +61,9 @@ const messageQueue = ref([]);
 
 const getTypeClass = (type) => {
   if (type === 'error') {
-    return 'text-red-400 border-red-400 dark:text-red-300 dark:border-red-300';
+    return 'vuefinder__toast__item--error';
   }
-  return 'text-lime-600 border-lime-600 dark:text-lime-300 dark:border-lime-1300';
+  return 'vuefinder__toast__item--success';
 };
 
 const removeItem = (index) => {
