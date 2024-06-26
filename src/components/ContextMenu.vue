@@ -1,22 +1,42 @@
 <template>
   <ul ref="contextmenu" v-show="context.active" :style="context.positions"
-      class="z-30 absolute text-xs bg-neutral-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-neutral-300 dark:border-gray-600 shadow rounded-sm select-none">
-    <li class="cursor-pointer hover:bg-neutral-200 dark:hover:bg-gray-700"
+      class="vuefinder__contextmenu">
+    <li class="vuefinder__contextmenu__item"
         v-for="(item) in filteredItems" :key="item.title">
       <template v-if="item.link">
-        <a class="block pl-2 pr-3 py-2 " target="_blank" :href="item.link" :download="item.link"
+        <a class="vuefinder__contextmenu__item--link" target="_blank" :href="item.link" :download="item.link"
            @click="app.emitter.emit('vf-contextmenu-hide')">
           <span>{{ item.title() }}</span>
         </a>
       </template>
       <template v-else>
-        <div class="pl-2 pr-3 py-1.5" @click="run(item)">
+        <div class="vuefinder__contextmenu__item__title" @click="run(item)">
           <span>{{ item.title() }}</span>
         </div>
       </template>
     </li>
   </ul>
 </template>
+
+<style>
+
+.vuefinder__contextmenu {
+  @apply z-30 absolute text-xs bg-neutral-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-neutral-300 dark:border-gray-600 shadow rounded-sm select-none;
+}
+
+.vuefinder__contextmenu__item {
+  @apply cursor-pointer hover:bg-neutral-200 dark:hover:bg-gray-700
+}
+
+.vuefinder__contextmenu__item--link {
+  @apply block pl-2 pr-3 py-2;
+}
+
+.vuefinder__contextmenu__item__title {
+  @apply pl-2 pr-3 py-1.5;
+}
+
+</style>
 
 <script setup>
 import {computed, inject, nextTick, reactive, ref} from 'vue';
