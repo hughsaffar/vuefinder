@@ -2,14 +2,14 @@
   <div class="vuefinder" ref="root" tabindex="0">
     <div :class="app.theme.actualValue">
       <div
-          :class="app.fullScreen ? 'fixed w-screen inset-0 z-20' : 'relative rounded resize-y '"
+          :class="app.fullScreen ? 'vuefinder__wrapper--fullscreen' : 'vuefinder__wrapper--sizedscreen'"
           :style="!app.fullScreen ? 'max-height: ' + maxHeight : ''"
-          class="overflow-hidden min-h-44 border flex flex-col bg-white dark:bg-gray-800 text-gray-700 dark:text-neutral-400 border-neutral-300 dark:border-gray-900 select-none"
+          class="vuefinder__wrapper"
           @mousedown="app.emitter.emit('vf-contextmenu-hide')"
           @touchstart="app.emitter.emit('vf-contextmenu-hide')">
         <Toolbar/>
         <Breadcrumb/>
-        <div class="relative flex overflow-hidden h-full">
+        <div class="vuefinder__wrapper__content">
             <TreeView/>
             <Explorer/>
         </div>
@@ -24,6 +24,24 @@
     </div>
   </div>
 </template>
+
+<style>
+.vuefinder__wrapper {
+ @apply overflow-hidden min-h-44 border flex flex-col bg-white dark:bg-gray-800 text-gray-700 dark:text-neutral-400 border-neutral-300 dark:border-gray-900 select-none; 
+}
+
+.vuefinder__wrapper--fullscreen {
+ @apply fixed w-screen inset-0 z-20; 
+}
+
+.vuefinder__wrapper--sizedscreen {
+ @apply relative rounded resize-y ; 
+}
+
+.vuefinder__wrapper__content {
+ @apply relative flex overflow-hidden h-full;  
+}
+</style>
 
 <script setup>
 import {inject, onMounted, provide, ref} from 'vue';
