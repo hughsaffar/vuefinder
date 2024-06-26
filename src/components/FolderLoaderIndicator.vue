@@ -1,14 +1,36 @@
 <template>
-  <div class="h-5 w-5 shrink-0">
+  <div class="vuefinder__folder_loader_indicator">
 
-    <LoadingSVG v-if="loading" class="p-1"/>
-    <div class=" cursor-pointer" v-else>
-      <SquareMinusSVG class="text-gray-600" v-if="opened && getLoadedFolder()?.folders.length" />
-      <SquarePlusSVG class="text-gray-400" v-if="!opened" />
+    <LoadingSVG v-if="loading" class="vuefinder__folder_loader_indicator--loading_icon"/>
+    <div class="vuefinder__folder_loader_indicator--loaded" v-else>
+      <SquareMinusSVG class="vuefinder__folder_loader_indicator__minus-icon" v-if="opened && getLoadedFolder()?.folders.length" />
+      <SquarePlusSVG class="vuefinder__folder_loader_indicator__plus-icon" v-if="!opened" />
     </div>
 
   </div>
 </template>
+
+<style>
+.vuefinder__folder_loader_indicator {
+  @apply h-5 w-5 shrink-0;
+}
+
+.vuefinder__folder_loader_indicator--loading_icon {
+  @apply p-1;
+}
+
+.vuefinder__folder_loader_indicator--loaded {
+  @apply cursor-pointer;
+}
+
+.vuefinder__folder_loader_indicator__minus-icon {
+  @apply text-gray-600;
+}
+
+.vuefinder__folder_loader_indicator__plus-icon {
+  @apply text-gray-400;
+}
+</style>
 
 
 <script setup>
