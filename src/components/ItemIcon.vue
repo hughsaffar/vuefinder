@@ -18,7 +18,7 @@
 <script setup>
 import {defineProps} from "vue";
 import FileSVG from './icons/file.svg';
-importFolderSVG from './icons/folder.svg';
+import FolderSVG from './icons/folder.svg';
 
 defineProps({
   type: {
