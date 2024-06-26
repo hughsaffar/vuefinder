@@ -1,16 +1,16 @@
 <template>
-  <div class="relative flex-auto flex flex-col">
-    <div v-if="app.view === 'list' || searchQuery.length" class="grid grid-cols-12 px-1 bg-neutral-50 dark:bg-gray-800 border-b border-neutral-300 dark:border-gray-700 text-xs select-none divide-x">
-      <div @click="sortBy('basename')" class="col-span-7 vf-sort-button">
+  <div class="vuefinder__explorer">
+    <div v-if="app.view === 'list' || searchQuery.length" class="vuefinder__explorer__table">
+      <div @click="sortBy('basename')" class="vuefinder__explorer__table__name_column vf-sort-button">
         {{ t('Name') }} <SortIcon :direction="sort.order" v-show="sort.active && sort.column === 'basename'"/>
       </div>
-      <div v-if="!searchQuery.length" @click="sortBy('file_size')" class="justify-center col-span-2 vf-sort-button">
+      <div v-if="!searchQuery.length" @click="sortBy('file_size')" class="vuefinder__explorer__table__size_column vf-sort-button">
         {{ t('Size') }} <SortIcon :direction="sort.order" v-show="sort.active && sort.column === 'file_size'"/>
       </div>
-      <div v-if="!searchQuery.length" @click="sortBy('last_modified')" class="justify-center col-span-3 vf-sort-button">
+      <div v-if="!searchQuery.length" @click="sortBy('last_modified')" class="vuefinder__explorer__table__date_column vf-sort-button">
         {{ t('Date') }} <SortIcon :direction="sort.order" v-show="sort.active && sort.column === 'last_modified'"/>
       </div>
-      <div v-if="searchQuery.length" @click="sortBy('path')" class="justify-center col-span-5 vf-sort-button">
+      <div v-if="searchQuery.length" @click="sortBy('path')" class="vuefinder__explorer__table__path_column vf-sort-button">
         {{ t('Filepath') }} <SortIcon :direction="sort.order" v-show="sort.active && sort.column === 'path'"/>
       </div>
     </div>
@@ -20,35 +20,35 @@
     </div>
 
     <div :ref="ds.scrollBarContainer" class="vf-explorer-scrollbar-container" :class="[{'grid-view': app.view === 'grid'}, {'search-active': searchQuery.length}]">
-      <div :ref="ds.scrollBar" class="w-5 bg-transparent pointer-events-none"></div>
+      <div :ref="ds.scrollBar" class="viewfinder__explorer__scrollbar pointer-events-none"></div>
     </div>
 
     <div :ref="ds.area"
-         class="h-full w-full text-xs p-1 vf-explorer-scrollbar vf-selector-area z-0 overflow-y-auto"
+         class="vuefinder__explorer__area vf-explorer-scrollbar vf-selector-area"
          @contextmenu.self.prevent="app.emitter.emit('vf-contextmenu-show',{event: $event, items: ds.getSelected()})"
     >
 
       <!-- Search View -->
       <Item v-if="searchQuery.length" v-for="(item, index) in getItems()"
             :item="item" :index="index" :dragImage="dragImage" class="vf-item vf-item-list">
-        <div class="grid grid-cols-12 items-center">
-          <div class="flex col-span-7 items-center">
+        <div class="vuefinder__explorer__search">
+          <div class="vuefinder__explorer__search__item">
             <ItemIcon :type="item.type" :small="app.compactListView"/>
-            <span class="overflow-ellipsis overflow-hidden whitespace-nowrap">{{ item.basename }}</span>
+            <span class="vuefinder__explorer__search__item__name">{{ item.basename }}</span>
           </div>
-          <div class="col-span-5 overflow-ellipsis overflow-hidden whitespace-nowrap">{{ item.path }}</div>
+          <div class="vuefinder__explorer__search__item__path">{{ item.path }}</div>
         </div>
       </Item>
       <!-- List View -->
       <Item v-if="app.view==='list' && !searchQuery.length" v-for="(item, index) in getItems()"
             :item="item" :index="index" :dragImage="dragImage" class="vf-item vf-item-list" draggable="true" :key="item.path">
-        <div class="grid grid-cols-12 items-center">
-          <div class="flex col-span-7 items-center">
+        <div class="vuefinder__explorer__list">
+          <div class="vuefidner__explorer__list__item">
             <ItemIcon :type="item.type" :small="app.compactListView"/>
-            <span class="overflow-ellipsis overflow-hidden whitespace-nowrap">{{ item.basename }}</span>
+            <span class="vuefinder__explorer__list__item__name">{{ item.basename }}</span>
           </div>
-          <div class="col-span-2 text-center">{{ item.file_size ? app.filesize(item.file_size) : '' }}</div>
-          <div class="col-span-3 overflow-ellipsis overflow-hidden whitespace-nowrap px-1 md:px-3">
+          <div class="vuefinder__explorer__list__item__size">{{ item.file_size ? app.filesize(item.file_size) : '' }}</div>
+          <div class="vuefinder__explorer__list__item__date">
             {{ datetimestring(item.last_modified) }}
           </div>
         </div>
@@ -59,16 +59,16 @@
         <div>
           <div class="relative">
             <img src="data:image/png;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                 class="lazy h-10 md:h-12 m-auto" v-if="(item.mime_type ?? '').startsWith('image') && app.showThumbnails"
+                 class="lazy vuefinder__explorer__grid__image" v-if="(item.mime_type ?? '').startsWith('image') && app.showThumbnails"
                  :data-src="app.requester.getPreviewUrl(app.fs.adapter, item)" :alt="item.basename" :key="item.path">
             <ItemIcon :type="item.type" v-else/>
-            <div class="absolute hidden md:block top-1/2 w-full text-center text-neutral-500"
+            <div class="vuefinder__explorer__grid__ext"
                  v-if="!((item.mime_type ?? '').startsWith('image') && app.showThumbnails) && item.type !== 'dir'" >
               {{ ext(item.extension) }}
             </div>
           </div>
 
-          <span class="break-all">{{ title_shorten(item.basename) }}</span>
+          <span class="vuefinder__explorer__grid__name">{{ title_shorten(item.basename) }}</span>
         </div>
       </Item>
     </div>
@@ -76,6 +76,88 @@
     <Toast/>
   </div>
 </template>
+
+<style>
+.vuefinder__explorer {
+  @apply relative flex-auto flex flex-col;
+}
+
+.vuefinder__explorer__table {
+  @apply grid grid-cols-12 px-1 bg-neutral-50 dark:bg-gray-800 border-b border-neutral-300 dark:border-gray-700 text-xs select-none divide-x;
+}
+
+.vuefinder__explorer__table__name_column {
+  @apply col-span-7;
+}
+
+.vuefinder__explorer__table__size_column {
+  @apply justify-center col-span-2;
+}
+
+.vuefinder__explorer__table__date_column {
+  @apply justify-center col-span-3;
+}
+
+.vuefinder__explorer__table__path_column {
+  @apply justify-center col-span-5;
+}
+
+.vuefinder__explorer__scrollbar {
+  @apply w-5 bg-transparent;
+}
+
+.vuefinder__explorer__area {
+  @apply h-full w-full text-xs p-1 z-0 overflow-y-auto;
+}
+
+.vuefinder__explorer__search {
+  @apply grid grid-cols-12 items-center;
+}
+
+.vuefinder__explorer__search__item {
+  @apply flex col-span-7 items-center;
+}
+
+.vuefinder__explorer__search__item__name {
+  @apply overflow-ellipsis overflow-hidden whitespace-nowrap;
+}
+
+.vuefinder__explorer__search__item__path {
+  @apply col-span-5 overflow-ellipsis overflow-hidden whitespace-nowrap;
+}
+
+.vuefinder__explorer__list {
+  @apply grid grid-cols-12 items-center;
+}
+
+.vuefinder__explorer__list__item {
+  @apply flex col-span-7 items-center;
+}
+
+.vuefinder__explorer__list__item__name {
+  @apply overflow-ellipsis overflow-hidden whitespace-nowrap;
+}
+
+.vuefinder__explorer__list__item__size {
+  @apply col-span-2 text-center;
+}
+
+.vuefinder__explorer__list__item__date {
+  @apply col-span-3 overflow-ellipsis overflow-hidden whitespace-nowrap px-1 md:px-3;
+}
+
+.vuefinder__explorer__grid__image {
+  @apply h-10 md:h-12 m-auto;
+}
+
+.vuefinder__explorer__grid__ext {
+  @apply absolute hidden md:block top-1/2 w-full text-center text-neutral-500;
+}
+
+.vuefinder__explorer__grid__name {
+  @apply break-all;
+}
+</style>
 
 <script setup>
 import {inject, onBeforeUnmount, onMounted, onUpdated, reactive, ref} from 'vue';
