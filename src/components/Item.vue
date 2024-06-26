@@ -13,9 +13,15 @@
       @contextmenu.prevent="app.emitter.emit('vf-contextmenu-show', {event: $event, items: ds.getSelected(), target: item })"
   >
     <slot/>
-    <PinSVG class="absolute top-0 right-0 text-amber-600" v-if="app.pinnedFolders.find(pin => pin.path === item.path)"/>
+    <PinSVG class="vuefinder__item__pin" v-if="app.pinnedFolders.find(pin => pin.path === item.path)"/>
   </div>
 </template>
+
+<style>
+.vuefinder__item__pin {
+  @apply absolute top-0 right-0 text-amber-600;
+}
+</style>
 
 <script setup>
 import {defineProps, inject} from 'vue';
