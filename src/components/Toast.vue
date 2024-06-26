@@ -46,7 +46,7 @@
 }
 
 .vuefinder__toast__item--success {
-  @apply text-lime-600 border-lime-600 dark:text-lime-300 dark:border-lime-1300;
+  @apply text-lime-600 border-lime-600 dark:text-lime-300 dark:border-lime-300;
 }
 </style>
 
