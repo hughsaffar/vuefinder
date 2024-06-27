@@ -1,11 +1,11 @@
 <template>
   <div
-      class="space-x-0.5 flex p-1.5 bg-neutral-100 dark:bg-gray-800 border-t border-b border-neutral-300 dark:border-gray-700/50 items-center select-none text-sm grow-0">
+      class="vuefinder__breadcrumb">
     <span :title="t('Toggle Tree View')">
       <ListTreeSVG
           @click="toggleTreeView"
-          class="h-6 w-6 p-0.5 rounded cursor-pointer text-slate-700 "
-          :class="app.showTreeView ? 'bg-gray-300 dark:bg-gray-700' : ''"
+          class="vuefinder__breadcrumb__icon"
+          :class="app.showTreeView ? 'vuefinder__breadcrumb__icon--active' : ''"
       />
     </span>
 
@@ -15,7 +15,7 @@
           @dragleave="handleDragLeave($event)"
           @drop="handleDropZone($event)"
           @click="handleGoUp"
-          :class="app.fs.isGoUpAvailable() ? 'text-slate-700 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-gray-700 cursor-pointer' : 'text-gray-400 dark:text-neutral-500'"
+          :class="app.fs.isGoUpAvailable() ? 'vuefinder__breadcrumb__icon__goup--enabled' : 'vuefinder__breadcrumb__icon__goup--disabled'"
       />
     </span>
 
@@ -26,7 +26,7 @@
       <CloseSVG @click="app.emitter.emit('vf-fetch-abort')"/>
     </span>
 
-    <div v-show="!app.fs.searchMode" @click.self="enterSearchMode" class="group flex bg-white dark:bg-gray-700 items-center rounded p-1 ml-2 w-full overflow-hidden">
+    <div v-show="!app.fs.searchMode" @click.self="enterSearchMode" class="group vuefinder__breadcrumb__home">
       <div>
         <HomeSVG
           @dragover="handleDragOver($event)"
@@ -35,28 +35,28 @@
           @click="app.emitter.emit('vf-fetch', {params:{q: 'index', adapter: app.fs.adapter}})"/>
       </div>
 
-      <div class="flex leading-6">
+      <div class="vuefinder__breadcrumb__home--hidden">
         <div v-if="app.fs.hiddenBreadcrumbs.length" class="flex" v-click-outside="handleClickOutside">
-          <div class="text-neutral-300 dark:text-gray-600 mx-0.5">/</div>
+          <div class="vuefinder__breadcrumb__home__background">/</div>
           <div class="relative">
             <span 
             @dragenter="app.fs.toggleHiddenBreadcrumbs(true)"
             @click="app.fs.toggleHiddenBreadcrumbs()"
-                   class="text-slate-700 dark:text-slate-200 hover:bg-neutral-100 dark:hover:bg-gray-800 rounded cursor-pointer">
-              <DotsSVG class="px-1 pointer-events-none" />
+                   class="vuefinder__breadcrumb__home__dot_icon_wrapper">
+              <DotsSVG class="vuefinder__breadcrumb__home__dot_icon" />
             </span>
           </div>
         </div>
       </div>
 
-      <div ref="breadcrumbContainer" class="flex leading-6 w-full overflow-hidden"  @click.self="enterSearchMode">
+      <div ref="breadcrumbContainer" class="vuefinder__breadcrumb__container"  @click.self="enterSearchMode">
         <div v-for="(item, index) in app.fs.breadcrumbs" :key="index">
-          <span class="text-neutral-300 dark:text-gray-600 mx-0.5">/</span>
+          <span class="vuefinder__breadcrumb__separator">/</span>
           <span
               @dragover="(index === app.fs.breadcrumbs.length - 1) || handleDragOver($event)"
               @dragleave="(index === app.fs.breadcrumbs.length - 1) || handleDragLeave($event)"
               @drop="(index === app.fs.breadcrumbs.length - 1) || handleDropZone($event, index)"
-              class="px-1.5 py-1 text-slate-700 dark:text-slate-200 hover:bg-neutral-100 dark:hover:bg-gray-800 rounded cursor-pointer whitespace-nowrap"
+              class="vuefinder__breadcrumb__item"
               :title="item.basename"
               @click="app.emitter.emit('vf-fetch', {params:{q: 'index', adapter: app.fs.adapter, path:item.path}})">{{
               item.name
@@ -66,7 +66,7 @@
 
       <LoadingSVG v-if="app.fs.loading"/>
     </div>
-    <div  v-show="app.fs.searchMode"  class="relative flex bg-white dark:bg-gray-700 justify-between items-center rounded p-1 ml-2 w-full">
+    <div  v-show="app.fs.searchMode"  class="vuefinder__breadcrumb__search">
       <div>
         <SearchSVG />
       </div>
@@ -76,27 +76,109 @@
           @blur="handleBlur"
           v-model="query"
           :placeholder="t('Search anything..')"
-          class="w-full pb-0 px-1 border-0 text-base ring-0 outline-0 text-gray-600 focus:ring-transparent focus:border-transparent dark:focus:ring-transparent dark:focus:border-transparent dark:text-gray-300 bg-transparent"
+          class="vuefinder__breadcrumb__search__input"
           type="text">
       <ExitSVG @click="exitSearchMode"/>
     </div>
 
     <div v-show="app.fs.showHiddenBreadcrumbs"
-        class="z-30 absolute top-[65px] md:top-[75px] left-[90px] rounded -mx-1.5 mt-1 bg-neutral-50 dark:bg-gray-800 max-w-80 max-h-50 shadow overflow-y-auto text-gray-700 dark:text-gray-200 border border-neutral-300 dark:border-gray-600">
+        class="vuefinder__breadcrumb__hidden">
       <div
           v-for="(item, index) in app.fs.hiddenBreadcrumbs" :key="index"
           @dragover="handleDragOver($event)"
           @dragleave="handleDragLeave($event)"
           @drop="handleHiddenBreadcrumbDropZone($event, index)"
           @click="handleHiddenBreadcrumbsClick(item)"
-          class="px-2 py-0.5 hover:bg-gray-400/20 cursor-pointer items-center whitespace-nowrap" >
-        <div class="flex pointer-events-none">
-          <span><FolderSVG class="h-5 w-5" /></span> <span class="inline-block w-full text-ellipsis overflow-hidden">{{ item.name}}</span>
+          class="vuefinder__breadcrumb__hidden__item" >
+        <div class="vuefinder__breadcrumb__hidden__item__icon__wrapper">
+          <span><FolderSVG class="vuefinder__breadcrumb__hidden__item__icon" /></span> <span class="vuefinder__breadcrumb__hidden__item__name">{{ item.name}}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+.vuefinder__breadcrumb {
+  @apply space-x-0.5 flex p-1.5 bg-neutral-100 dark:bg-gray-800 border-t border-b border-neutral-300 dark:border-gray-700/50 items-center select-none text-sm grow-0;
+}
+
+.vuefinder__breadcrumb__icon {
+  @apply h-6 w-6 p-0.5 rounded cursor-pointer text-slate-700 ;
+}
+
+.vuefinder__breadcrumb__icon--active {
+  @apply bg-gray-300 dark:bg-gray-700;
+}
+
+.vuefinder__breadcrumb__icon__goup--enabled {
+  @apply text-slate-700 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-gray-700 cursor-pointer;
+}
+
+.vuefinder__breadcrumb__icon__goup--disabled {
+  @apply text-gray-400 dark:text-neutral-500
+}
+
+.vuefinder__breadcrumb__home {
+  @apply flex bg-white dark:bg-gray-700 items-center rounded p-1 ml-2 w-full overflow-hidden;
+}
+
+.vuefinder__breadcrumb__home--hidden {
+  @apply flex leading-6;
+}
+
+.vuefinder__breadcrumb__home__background {
+  @apply text-neutral-300 dark:text-gray-600 mx-0.5;
+}
+
+.vuefinder__breadcrumb__home__dot_icon_wrapper {
+  @apply text-slate-700 dark:text-slate-200 hover:bg-neutral-100 dark:hover:bg-gray-800 rounded cursor-pointer;
+}
+
+.vuefinder__breadcrumb__home__dot_icon {
+  @apply px-1 pointer-events-none;
+}
+
+.vuefinder__breadcrumb__container {
+  @apply flex leading-6 w-full overflow-hidden;
+}
+
+.vuefinder__breadcrumb__separator {
+  @apply text-neutral-300 dark:text-gray-600 mx-0.5;
+}
+
+.vuefinder__breadcrumb__item {
+  @apply px-1.5 py-1 text-slate-700 dark:text-slate-200 hover:bg-neutral-100 dark:hover:bg-gray-800 rounded cursor-pointer whitespace-nowrap;
+}
+
+.vuefinder__breadcrumb__search {
+  @apply relative flex bg-white dark:bg-gray-700 justify-between items-center rounded p-1 ml-2 w-full;
+}
+
+.vuefinder__breadcrumb__search__input {
+  @apply w-full pb-0 px-1 border-0 text-base ring-0 outline-0 text-gray-600 focus:ring-transparent focus:border-transparent dark:focus:ring-transparent dark:focus:border-transparent dark:text-gray-300 bg-transparent;
+}
+
+.vuefinder__breadcrumb__hidden {
+  @apply z-30 absolute top-[65px] md:top-[75px] left-[90px] rounded -mx-1.5 mt-1 bg-neutral-50 dark:bg-gray-800 max-w-80 max-h-40 shadow overflow-y-auto text-gray-700 dark:text-gray-200 border border-neutral-300 dark:border-gray-600;
+}
+
+.vuefinder__breadcrumb__hidden_item {
+  @apply px-2 py-0.5 hover:bg-gray-400/20 cursor-pointer items-center whitespace-nowrap;
+}
+
+.vuefinder__breadcrumb__hidden__item__icon__wrapper {
+  @apply flex pointer-events-none;
+}
+
+.vuefinder__breadcrumb__hidden__item__icon {
+  @apply h-5 w-5;
+}
+
+.vuefinder__breadcrumb__hidden__item__name {
+  @apply inline-block w-full text-ellipsis overflow-hidden;
+}
+</style>
 
 <script setup>
 import {inject, nextTick, onMounted, ref, watch} from 'vue';
