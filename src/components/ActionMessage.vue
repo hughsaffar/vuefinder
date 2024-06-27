@@ -1,10 +1,16 @@
 <template>
-  <div class="text-sm text-green-600 dark:text-green-600 transition-opacity duration-500 ease-out"
+  <div class="vuefinder__action_message"
        :class="[{ 'opacity-0': !shown }]">
     <slot v-if="$slots.default"/>
     <span v-else>{{ t('Saved.') }}</span>
   </div>
 </template>
+
+<style>
+.vuefinder__action_message {
+  @apply text-sm text-green-600 dark:text-green-600 transition-opacity duration-500 ease-out;
+}
+</style>
 
 <script>
 import {ref, onMounted, onUnmounted, inject} from 'vue';
