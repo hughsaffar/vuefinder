@@ -1,8 +1,8 @@
 <template>
-  <h3 class="mb-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-400" id="modal-title"
+  <h3 class="vuefinder__pdf_preview_modal__title" id="modal-title"
          :title="app.modal.data.item.path">{{ app.modal.data.item.basename }}</h3>
   <div>
-    <object class="h-[60vh]" :data="getPDFUrl()" type="application/pdf" width="100%" height="100%">
+    <object class="vuefinder__pdf_preview_modal__pdf" :data="getPDFUrl()" type="application/pdf" width="100%" height="100%">
       <iframe
           class="border-0"
           :src="getPDFUrl()"
@@ -18,6 +18,16 @@
     </object>
   </div>
 </template>
+
+<style>
+.vuefinder__pdf_preview_modal__title {
+  @apply mb-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-400;
+}
+
+.vuefinder__pdf_preview_modal__pdf {
+  @apply h-[60vh];
+}
+</style>
 
 <script setup>
 
