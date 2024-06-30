@@ -1,21 +1,49 @@
 <template>
   <div class="flex">
-    <h3 class="mb-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-400" id="modal-title"
+    <h3 class="vuefinder__image_preview_modal__title" id="modal-title"
          :title="app.modal.data.item.path">{{ app.modal.data.item.basename }}</h3>
-    <div class="ml-auto mb-2">
-      <button @click="crop" class="ml-1 px-2 py-1 rounded border border-transparent shadow-sm bg-blue-700/75 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-700/50  text-base font-medium text-white sm:ml-3 sm:w-auto sm:text-sm" v-if="showEdit">
+    <div class="vuefinder__image_preview_modal__buttons">
+      <button @click="crop" class="vuefinder__image_preview_modal__crop" v-if="showEdit">
         {{ t('Crop') }}</button>
-      <button class="ml-1 px-2 py-1  text-blue-500" @click="editMode()" v-if="app.features.includes(FEATURES.EDIT)">{{ showEdit ? t('Cancel'): t('Edit') }}</button>
+      <button class="vuefinder__image_preview_modal__button--secondary" @click="editMode()" v-if="app.features.includes(FEATURES.EDIT)">{{ showEdit ? t('Cancel'): t('Edit') }}</button>
     </div>
   </div>
 
-  <div class="w-full flex justify-center">
-    <img ref="image" class="max-w-[50vh] max-h-[50vh]" :src="app.requester.getPreviewUrl(app.modal.data.adapter, app.modal.data.item)" alt="">
+  <div class="vuefinder__image_preview_modal__image__warpper">
+    <img ref="image" class="vuefinder__image_preview_modal__image" :src="app.requester.getPreviewUrl(app.modal.data.adapter, app.modal.data.item)" alt="">
   </div>
 
   <message v-if="message.length" @hidden="message=''" :error="isError">{{ message }}</message>
 
 </template>
+
+<style>
+
+.vuefinder__image_preview_modal__title {
+  @apply mb-2 text-lg leading-6 font-medium text-gray-900 dark:text-gray-400;
+}
+
+.vuefinder__image_preview_modal__buttons {
+  @apply ml-auto mb-2;
+}
+
+.vuefinder .vuefinder__image_preview_modal__crop {
+  @apply ml-1 px-2 py-1 rounded border border-transparent shadow-sm bg-blue-700/75 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-700/50  text-base font-medium text-white sm:ml-3 sm:w-auto sm:text-sm;
+}
+
+.vuefinder .vuefinder__image_preview_modal__button--secondary {
+  @apply ml-1 px-2 py-1 text-blue-500;
+}
+
+.vuefinder__image_preview_modal__image__wrapper {
+  @apply w-full flex justify-center;
+}
+
+.vuefinder__image_preview_modal__image {
+  @apply max-w-[50vh] max-h-[50vh];
+}
+
+</style>
 
 <script setup>
 import 'cropperjs/dist/cropper.css';
