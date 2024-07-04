@@ -104,7 +104,7 @@ export default function () {
         }
 
         if (area.value?.getBoundingClientRect().height < area.value.scrollHeight) {
-            scrollBar.value.style.height = area.value.scrollHeight + 'px';
+            scrollBar.value.style.height = area.value?.scrollHeight + 'px';
             scrollBar.value.style.display = 'block';
         } else {
             scrollBar.value.style.height = '100%';
