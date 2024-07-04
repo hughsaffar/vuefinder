@@ -103,7 +103,7 @@ export default function () {
             return;
         }
 
-        if (area.value?.getBoundingClientRect().height < area.value.scrollHeight) {
+        if (area.value?.getBoundingClientRect().height < area.value?.scrollHeight) {
             scrollBar.value.style.height = area.value?.scrollHeight + 'px';
             scrollBar.value.style.display = 'block';
         } else {
