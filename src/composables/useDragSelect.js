@@ -37,7 +37,7 @@ export default function () {
             } else {
                 isDraggingRef.value = false;
                 // Prevent starting selection when start resizing the selectable area from the corner.
-                const offsetX = area.value.offsetWidth - event.offsetX;
+                const offsetX = area.value?.offsetWidth - event.offsetX;
                 const offsetY = area.value.offsetHeight - event.offsetY;
                 if (offsetX < 15 && offsetY < 15) {
                     dragSelectInstance.Interaction._reset(event);
@@ -103,7 +103,7 @@ export default function () {
             return;
         }
 
-        if (area.value.getBoundingClientRect().height < area.value.scrollHeight) {
+        if (area.value?.getBoundingClientRect().height < area.value.scrollHeight) {
             scrollBar.value.style.height = area.value.scrollHeight + 'px';
             scrollBar.value.style.display = 'block';
         } else {

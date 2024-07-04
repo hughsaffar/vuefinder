@@ -226,7 +226,7 @@ watch(breadcrumbContainerWidth, newQuery => {
 });
 
 const updateContainerWidth = () => {
-    breadcrumbContainerWidth.value = breadcrumbContainer.value.offsetWidth;
+    breadcrumbContainerWidth.value = breadcrumbContainer.value?.offsetWidth;
 }
 onMounted(() => {
   new ResizeObserver(updateContainerWidth).observe(breadcrumbContainer.value);
